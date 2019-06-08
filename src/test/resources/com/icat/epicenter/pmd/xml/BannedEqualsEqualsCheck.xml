@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+<test-data
+    xmlns="http://pmd.sourceforge.net/rule-tests"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <test-code>
+        <description>Default of String Equals Comparison</description>
+        <expected-problems>1</expected-problems>
+        <code><![CDATA[
+public class TestCode {
+	public boolean compare(String input) {
+		String other = "foo";
+		return other==input;
+	}
+}
+     ]]></code>
+     	
+    </test-code>
+    <test-code>
+        <description>Test Property read/heiarchy</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>7</expected-linenumbers>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public boolean compare(List<String> firstList) {
+		ArrayList<?> otherList = null;
+		return firstList==otherList;
+	}
+}
+
+     ]]></code>
+     <source-type>java</source-type>
+     
+    </test-code>
+    
+    <test-code>
+        <description>Test Matching Calls to submethod</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public ArrayList<?> makeList(int size) {
+		return new ArrayList(size);
+	}
+	
+	public boolean other(){
+		ArrayList<?> other = null;
+		return makeList(1).size()==other.size();
+	}
+	
+}
+
+     ]]></code>
+     <source-type>java</source-type> 
+    </test-code>
+    
+<!--     <test-code>
+        <description>Test Type inferance which doesn't workd</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>10</expected-linenumbers>
+        <
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public ArrayList<?> makeList(int size) {
+		return new ArrayList(size);
+	}
+	
+	public boolean other(){
+		return makeList(1)==makeList(2);
+	}
+	
+}
+
+     ]]></code>
+     <source-type>java</source-type>
+     
+    </test-code> -->
+    
+    <test-code>
+        <description>Test Type inferance</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>11</expected-linenumbers>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public ArrayList<?> makeList(int size) {
+		return new ArrayList(size);
+	}
+	
+	public boolean other(){
+		ArrayList<?> other = null;
+		return makeList(1)==other;
+	}
+	
+}
+
+     ]]></code>
+     <source-type>java</source-type> 
+    </test-code>
+    
+     <test-code>
+        <description>Test Statics</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>7</expected-linenumbers>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public static final ArrayList<String> potatoes = new ArrayList<String>();
+	public boolean compare(List<String> firstList) {
+		return firstList==potatoes;
+	}
+}
+     ]]></code>
+     <source-type>java</source-type>
+     
+    </test-code>
+    
+    
+    
+     <test-code>
+        <description>Test Type inferance</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>11</expected-linenumbers>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public ArrayList<?> makeList(int size) {
+		return new ArrayList(size);
+	}
+	
+	public boolean other(){
+		ArrayList<?> other = null;
+		return makeList(1)==other;
+	}
+	
+}
+
+     ]]></code>
+     <source-type>java</source-type> 
+    </test-code>
+    
+    <test-code>
+        <description>Compare to Null Ok</description>
+        <rule-property name="bannedClasses">java.util.AbstractList</rule-property>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestCode {
+	public ArrayList<?> makeList(int size) {
+		return new ArrayList(size);
+	}
+	
+	public boolean other(){
+		ArrayList<?> other = null;
+		boolean check1 = makeList(1)==null;
+		boolean check2 = other == null;
+		return check1 || check2;
+	}
+	
+}
+
+     ]]></code>
+     <source-type>java</source-type> 
+    </test-code>
+    
+     <test-code>
+        <description>Real PM</description>
+        <rule-property name="bannedClasses">com.fja.pm.util.AbstractDiscreteValue</rule-property>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>17</expected-linenumbers>
+        <code><![CDATA[
+import java.lang.reflect.Field;
+import java.util.Hashtable;
+
+import org.apache.log4j.Logger;
+
+import com.icat.pm.vo.CoverageType;
+
+public class AbstractValueUtil {
+	static Logger logger = Logger.getLogger(AbstractDiscreteValueUtil.class);
+	private static Hashtable<Class<?>, Object> cache = new Hashtable<Class<?>, Object>(50);
+	private AbstractValueUtil() {
+		
+	}
+	@SuppressWarnings("unchecked")
+	public static <T> T getNullValue(final Class<? extends T> clazz){
+		CoverageType other=null;
+		if(CoverageType.BI==other)
+			return null;
+		if(cache.containsKey(clazz))
+			return (T) cache.get(clazz);
+		try {
+			Field f = clazz.getField("NULL");
+			Object o = f.get(null);
+			cache.put(clazz, o);
+			return (T)o;
+		} catch (Exception exception) {
+			logger.error("There was a problem in getNullValue",exception);
+		}
+		return null;
+	}
+}
+     ]]></code>
+     <source-type>java</source-type>
+     
+    </test-code> 
+</test-data>
